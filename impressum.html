@@ -1,369 +1,380 @@
 <!DOCTYPE html>
 <html lang="de">
-    <head>
-        <script>
-            // Theme handling
-            function getInitialTheme() {
-                const savedTheme = localStorage.getItem('theme');
-                if (savedTheme) return savedTheme;
-                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                return systemPrefersDark ? 'dark' : 'light';
-            }
-            const initialTheme = getInitialTheme();
-            document.documentElement.setAttribute('data-theme', initialTheme);
-        </script>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Impressum - Whuddy</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+<head>
+    <script>
+        // 1. On page load, figure out whether the user had a saved theme.
+        //    If not, check if system prefers dark.
+        function getInitialTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) return savedTheme;
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            return systemPrefersDark ? 'dark' : 'light';
+        }
+        const initialTheme = getInitialTheme();
+        document.documentElement.setAttribute('data-theme', initialTheme);
+    </script>
 
-            :root {
-                --primary: #10b981;
-                --dark: #222;
-                --light: #f8f7f4;
-                --gray: #64748b;
-                color-scheme: light dark;
-            }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressum - Whuddy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic resets and variables */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #10b981;
+            --dark: #222;
+            --light: #f8f7f4;
+            --gray: #64748b;
+            color-scheme: light dark;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
 
-            html {
-                scroll-behavior: smooth;
-            }
+        /* Default (light) styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            color: var(--dark);
+            background: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .logo h2 {
+            margin: 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            padding: 0;
+            color: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        .theme-toggle:hover {
+            background: rgba(0,0,0,0.05);
+        }
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .theme-toggle .moon {
+            display: none;
+        }
 
-            body {
-                font-family: 'Inter', sans-serif;
-                line-height: 1.5;
-                color: var(--dark);
-                background: var(--light);
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-            }
+        .content {
+            max-width: 48rem;
+            margin: 8rem auto 0 auto;
+            padding: 0 1.5rem 3rem;
+            flex: 1;
+        }
+        .write-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            z-index: 50;
+        }
+        .write-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .footer-links a {
+            color: inherit;
+            text-decoration: underline;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .footer-links a:hover {
+            opacity: 1;
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+        }
+        h3 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        h4 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        p {
+            margin-bottom: 1rem;
+        }
 
-            .navbar {
-                position: fixed;
-                top: 0; left: 0; right: 0;
-                padding: 1rem 2rem;
-                background: rgba(255,255,255,0.8);
-                backdrop-filter: blur(8px);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                z-index: 100;
-            }
-
-            .logo {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                cursor: pointer;
-                text-decoration: none;
-                color: inherit;
-            }
-
-            .logo img {
-                width: 40px;
-                height: 40px;
-                object-fit: contain;
-            }
-
-            .logo h2 {
-                margin: 0;
-            }
-
-            .nav-links {
-                display: flex;
-                gap: 1.5rem;
-                list-style: none;
-                align-items: center;
-                margin: 0;
-                padding: 0;
-            }
-
-            .nav-links a {
-                color: inherit;
-                text-decoration: none;
-                font-weight: 500;
-                transition: color 0.2s;
-            }
-
-            .nav-links a:hover {
-                color: var(--primary);
-            }
-
-            .theme-toggle {
-                background: none;
-                border: none;
-                padding: 0;
-                color: inherit;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 32px;
-                height: 32px;
-                border-radius: 8px;
-                transition: background-color 0.3s;
-            }
-
-            .theme-toggle:hover {
-                background: rgba(0,0,0,0.05);
-            }
-
-            .theme-toggle svg {
-                width: 20px;
-                height: 20px;
-                transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            .theme-toggle .moon {
-                display: none;
-            }
-
-            .content {
-                max-width: 48rem;
-                margin: 8rem auto 0 auto;
-                padding: 0 1.5rem 3rem;
-                flex: 1;
-            }
-
-            .write-button {
-                position: fixed;
-                bottom: 2rem;
-                right: 2rem;
-                background: var(--primary);
-                color: white;
-                padding: 0.75rem 1.5rem;
-                border-radius: 9999px;
-                text-decoration: none;
-                font-weight: 600;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                transition: transform 0.2s, box-shadow 0.2s;
-                z-index: 50;
-            }
-
-            .write-button:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-            }
-
-            .footer {
-                padding: 1.5rem;
-                border-top: 1px solid rgba(0,0,0,0.1);
-                text-align: center;
-                margin-top: auto;
-            }
-
-            .footer-links {
-                display: flex;
-                justify-content: center;
-                gap: 1rem;
-                margin-top: 1rem;
-            }
-
-            .footer-links a {
-                color: inherit;
-                text-decoration: underline;
-                opacity: 0.7;
-                transition: opacity 0.2s;
-            }
-
-            .footer-links a:hover {
-                opacity: 1;
-            }
-
-            h2 {
-                margin-bottom: 1.5rem;
-            }
-
-            h3 {
-                margin-top: 2rem;
-                margin-bottom: 1rem;
-            }
-
-            h4 {
-                margin-top: 1.5rem;
-                margin-bottom: 0.5rem;
-            }
-
-            p {
-                margin-bottom: 1rem;
-            }
-
-            [data-theme="dark"] body {
+        /*
+         * Fallback to dark mode if system is dark AND user hasn't explicitly chosen "light".
+         */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) body {
                 background: var(--dark);
                 color: var(--light);
             }
-
-            [data-theme="dark"] .navbar {
+            :root:not([data-theme="light"]) .navbar {
                 background: rgba(34,34,34,0.8);
             }
+        }
 
-            [data-theme="dark"] .theme-toggle .sun {
+        /*
+         * Explicit override if data-theme="dark"
+         */
+        [data-theme="dark"] body {
+            background: var(--dark);
+            color: var(--light);
+        }
+        [data-theme="dark"] .navbar {
+            background: rgba(34,34,34,0.8);
+        }
+        [data-theme="dark"] .theme-toggle .sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .moon {
+            display: block;
+        }
+
+        /*
+         * Explicit override if data-theme="light"
+         */
+        [data-theme="light"] body {
+            background: var(--light);
+            color: var(--dark);
+        }
+        [data-theme="light"] .navbar {
+            background: rgba(255,255,255,0.8);
+        }
+        [data-theme="light"] .theme-toggle .moon {
+            display: none;
+        }
+        [data-theme="light"] .theme-toggle .sun {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
                 display: none;
             }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="logo">
+            <img src="https://iili.io/2sL4YYB.png" alt="Whuddy Logo">
+            <h2>Whuddy</h2>
+        </a>
+        <ul class="nav-links">
+            <li>
+                <a href="/#features">Features</a>
+            </li>
+            <li>
+                <a href="/#about">Über Whuddy</a>
+            </li>
+            <li>
+                <a href="/#contact">Kontakt</a>
+            </li>
+            <li>
+                <button class="theme-toggle" aria-label="Theme wechseln">
+                    <!-- Icon for Dark Mode -->
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <!-- Icon for Light Mode -->
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <a href="https://wa.me/+491234567890" class="write-button">Whuddy schreiben</a>
 
-            [data-theme="dark"] .theme-toggle .moon {
-                display: block;
-            }
+    <div class="content">
+        <!-- Here follows a placeholder Impressum; please adapt to your needs -->
+        <h2>Impressum</h2>
+        <p>
+            Angaben gemäß § 5 TMG / § 18 Medienstaatsvertrag:
+        </p>
+        <p>
+            <strong>Verantwortlich für den Inhalt:</strong><br>
+            (Dein Name / Firmenname)<br>
+            (Straße &amp; Hausnummer)<br>
+            (PLZ &amp; Ort)<br>
+            (Land)
+        </p>
+        <p>
+            <strong>Kontakt:</strong><br>
+            Telefon: (Telefonnummer einfügen)<br>
+            E-Mail: (E-Mail-Adresse einfügen)<br>
+            Website: (Website, falls vorhanden)
+        </p>
 
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background: var(--dark);
-                    color: var(--light);
-                }
-                .navbar {
-                    background: rgba(34,34,34,0.8);
-                }
-            }
+        <h3>Haftung für Inhalte</h3>
+        <p>
+            Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf
+            diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis
+            10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte
+            oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
+            zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen
+            zur Entfernung oder Sperrung der Nutzung von Informationen nach den
+            allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung
+            ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung
+            möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir
+            diese Inhalte umgehend entfernen.
+        </p>
 
-            @media (max-width: 768px) {
-                .nav-links {
-                    display: none;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <nav class="navbar">
-            <a href="/" class="logo">
-                <img src="https://iili.io/2sL4YYB.png" alt="Whuddy Logo">
-                <h2>Whuddy</h2>
-            </a>
-            <ul class="nav-links">
-                <li>
-                    <a href="/#features">Features</a>
-                </li>
-                <li>
-                    <a href="/#about">Über Whuddy</a>
-                </li>
-                <li>
-                    <a href="/#contact">Kontakt</a>
-                </li>
-                <li>
-                    <button class="theme-toggle" aria-label="Theme wechseln">
-                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                    </button>
-                </li>
-            </ul>
-        </nav>
-        <a href="https://wa.me/+491234567890" class="write-button">Whuddy schreiben</a>
+        <h3>Haftung für Links</h3>
+        <p>
+            Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte
+            wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte
+            auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist
+            stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die
+            verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche
+            Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der
+            Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der
+            verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer
+            Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen
+            werden wir derartige Links umgehend entfernen.
+        </p>
 
-        <div class="content">
-            <!-- Hier folgt ein Platzhalter-Impressum, bitte individuell anpassen -->
-            <h2>Impressum</h2>
-            <p>
-                Angaben gemäß § 5 TMG / § 18 Medienstaatsvertrag:
-            </p>
-            <p>
-                <strong>Verantwortlich für den Inhalt:</strong><br>
-                (Dein Name / Firmenname)<br>
-                (Straße & Hausnummer)<br>
-                (PLZ & Ort)<br>
-                (Land)
-            </p>
-            <p>
-                <strong>Kontakt:</strong><br>
-                Telefon: (Telefonnummer einfügen)<br>
-                E-Mail: (E-Mail-Adresse einfügen)<br>
-                Website: (Website, falls vorhanden)
-            </p>
-            <h3>Haftung für Inhalte</h3>
-            <p>
-                Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf
-                diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis
-                10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte
-                oder gespeicherte fremde Informationen zu überwachen oder nach Umständen
-                zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen
-                zur Entfernung oder Sperrung der Nutzung von Informationen nach den
-                allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung
-                ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung
-                möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir
-                diese Inhalte umgehend entfernen.
-            </p>
-            <h3>Haftung für Links</h3>
-            <p>
-                Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte
-                wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte
-                auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist
-                stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die
-                verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche
-                Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der
-                Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der
-                verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer
-                Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen
-                werden wir derartige Links umgehend entfernen.
-            </p>
-            <h3>Urheberrecht</h3>
-            <p>
-                Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen
-                Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als
-                solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und
-                jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen
-                der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-                Downloads und Kopien dieser Seite sind nur für den privaten, nicht
-                kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite
-                nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter
-                beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet.
-                Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden,
-                bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von
-                Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
-            </p>
-            <h3>Streitschlichtung</h3>
-            <p>
-                Die Europäische Kommission stellt eine Plattform zur
-                Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr"
-                target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr</a>.
-                Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
-                einer Verbraucherschlichtungsstelle teilzunehmen.
-            </p>
-            <h3>Kontakt</h3>
-            <p>
-                Sollten Sie Fragen zu diesem Impressum haben, wenden Sie sich bitte an uns
-                unter den oben angegebenen Kontaktdaten.
-            </p>
-            <p><em>Stand: (Datum einfügen)</em></p>
+        <h3>Urheberrecht</h3>
+        <p>
+            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen
+            Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als
+            solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und
+            jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen
+            der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+            Downloads und Kopien dieser Seite sind nur für den privaten, nicht
+            kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite
+            nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter
+            beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet.
+            Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden,
+            bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von
+            Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
+        </p>
+
+        <h3>Streitschlichtung</h3>
+        <p>
+            Die Europäische Kommission stellt eine Plattform zur
+            Online-Streitbeilegung (OS) bereit: 
+            <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
+                https://ec.europa.eu/consumers/odr
+            </a>.
+            Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
+            einer Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+
+        <h3>Kontakt</h3>
+        <p>
+            Sollten Sie Fragen zu diesem Impressum haben, wenden Sie sich bitte an uns
+            unter den oben angegebenen Kontaktdaten.
+        </p>
+        <p><em>Stand: (Datum einfügen)</em></p>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 Whuddy. Alle Rechte vorbehalten.</p>
+        <div class="footer-links">
+            <a href="/impressum.html">Impressum</a>
+            <a href="/datenschutz.html">Datenschutzerklärung</a>
         </div>
+    </footer>
 
-        <footer class="footer">
-            <p>© 2025 Whuddy. Alle Rechte vorbehalten.</p>
-            <div class="footer-links">
-                <a href="/impressum.html">Impressum</a>
-                <a href="/datenschutz.html">Datenschutzerklärung</a>
-            </div>
-        </footer>
-
-        <script>
-            function toggleTheme() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-            }
-            document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
-        </script>
-    </body>
+    <script>
+        // 2. Theme toggle, runs on user click.
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
+    </script>
+</body>
 </html>
