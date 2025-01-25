@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    <!-- 1. JavaScript für System-Theme-Erkennung & localStorage-Check -->
     <script>
-        // 1. On page load, figure out whether the user had a saved theme.
-        //    If not, check if system prefers dark.
         function getInitialTheme() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) return savedTheme;
@@ -18,8 +17,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datenschutzerklärung - Whuddy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 2. Styles inkl. Light/Dark-Mode-Logik und CTA-Button -->
     <style>
-        /* Basic resets and variables */
+        /* Basic Resets und Variablen */
         * {
             margin: 0;
             padding: 0;
@@ -36,7 +37,7 @@
             scroll-behavior: smooth;
         }
 
-        /* Default (light) styling */
+        /* Default (Light) Styling */
         body {
             font-family: 'Inter', sans-serif;
             line-height: 1.5;
@@ -117,30 +118,15 @@
             display: none;
         }
 
+        /* Haupt-Content */
         .content {
             max-width: 48rem;
             margin: 8rem auto 0 auto;
             padding: 0 1.5rem 3rem;
             flex: 1;
         }
-        .write-button {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            text-decoration: none;
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            z-index: 50;
-        }
-        .write-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
+
+        /* Footer */
         .footer {
             padding: 1.5rem;
             border-top: 1px solid rgba(0,0,0,0.1);
@@ -162,23 +148,42 @@
         .footer-links a:hover {
             opacity: 1;
         }
-        h2 {
-            margin-bottom: 1rem;
+
+        /* CTA-Button (wie in index.html, unten rechts) */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        h3 {
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+        .cta-button:hover {
+            transform: scale(1.05);
         }
-        h4 {
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+        .cta-button img {
+            width: 20px;
+            height: 20px;
         }
-        p {
-            margin-bottom: 1rem;
+
+        /* Floating CTA Button (FAB) – dauerhaft sichtbar am unteren rechten Rand */
+        .fab {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
+            /* Keine visibility-toggle-Animation hier, 
+               weil er immer eingeblendet sein soll */
         }
 
         /*
-         * Fallback if OS is dark mode AND user has NOT explicitly chosen "light"
+         * Dark-Mode-Fallback via prefers-color-scheme, 
+         * sofern user nicht explizit data-theme="light" gewählt hat
          */
         @media (prefers-color-scheme: dark) {
             :root:not([data-theme="light"]) body {
@@ -191,7 +196,7 @@
         }
 
         /*
-         * If user explicitly toggles theme
+         * Explizit: data-theme="dark"
          */
         [data-theme="dark"] body {
             background: var(--dark);
@@ -207,6 +212,9 @@
             display: block;
         }
 
+        /*
+         * Explizit: data-theme="light"
+         */
         [data-theme="light"] body {
             background: var(--light);
             color: var(--dark);
@@ -223,12 +231,13 @@
 
         @media (max-width: 768px) {
             .nav-links {
-                display: none;
+                display: none; /* falls du ein Mobile-Hamburger-Menü möchtest */
             }
         }
     </style>
 </head>
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
         <a href="/" class="logo">
             <img src="https://iili.io/2sL4YYB.png" alt="Whuddy Logo">
@@ -246,13 +255,13 @@
             </li>
             <li>
                 <button class="theme-toggle" aria-label="Theme wechseln">
-                    <!-- Icon for Dark Mode -->
+                    <!-- Icon für Dark Mode -->
                     <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
-                    <!-- Icon for Light Mode -->
+                    <!-- Icon für Light Mode -->
                     <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round">
@@ -270,11 +279,17 @@
             </li>
         </ul>
     </nav>
-    <a href="https://wa.me/+491234567890" class="write-button">Whuddy schreiben</a>
 
+    <!-- WhatsApp-Floating-Button (immer sichtbar) -->
+    <a href="https://wa.me/+491234567890" class="cta-button fab" id="fab">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        Schreib Whuddy
+    </a>
+
+    <!-- HAUPTINHALT: Datenschutzerklärung -->
     <div class="content">
-        <!-- Datenschutz-Inhalt (placeholder text below, adapt as needed) -->
         <h2 style="margin-bottom:1rem;">Datenschutzerklärung für den WhatsApp-KI-Assistenten [Name deines Bots]</h2>
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">1. Verantwortlicher für die Datenverarbeitung</h3>
         <p style="margin-bottom:1em;">
             [Dein Name/Name deiner Firma]<br>
@@ -282,11 +297,13 @@
             [Deine E-Mail-Adresse]<br>
             [Deine Webseite (optional)]
         </p>
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">2. Datenschutzbeauftragter (optional)</h3>
         <p style="margin-bottom:1em;">
             [Name des Datenschutzbeauftragten, falls vorhanden]<br>
             [Kontaktinformationen des Datenschutzbeauftragten, falls vorhanden]
         </p>
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">3. Erhebung und Verarbeitung personenbezogener Daten</h3>
         <p style="margin-bottom:1em;">
             Wir betreiben den WhatsApp-KI-Assistenten [Name deines Bots] (im Folgenden "Bot"), um Ihnen einen KI-gestützten Service über WhatsApp anzubieten. Im Rahmen der Nutzung des Bots werden folgende Kategorien personenbezogener Daten verarbeitet:
@@ -295,60 +312,61 @@
         <p style="margin-bottom:1em;"><strong>Name (optional):</strong> Ihr im WhatsApp-Profil hinterlegter Name kann angezeigt werden, um die Kommunikation persönlicher zu gestalten.</p>
         <p style="margin-bottom:1em;"><strong>Chat-ID:</strong> Die Chat-ID (Einzel- oder Gruppenchat) wird verarbeitet, um den Kontext der Konversation zu verstehen.</p>
         <p style="margin-bottom:1em;"><strong>Chat-Name (optional):</strong> Der Name des Chats (z.B. Gruppenname) wird für Komfortfunktionen und zur internen Verwaltung der Chats verwendet.</p>
-        <p style="margin-bottom:1em;"><strong>Nachrichten-Inhalt:</strong> Inhalte Ihrer Nachrichten (Text-, Audio-, Mediendateien) werden umfassend verarbeitet, um Ihre Anfragen zu verstehen und entsprechende Antworten zu generieren.</p>
+        <p style="margin-bottom:1em;"><strong>Nachrichten-Inhalt:</strong> Inhalte Ihrer Nachrichten (Text-, Audio- und ggf. Mediendateien) werden umfassend verarbeitet, um Ihre Anfragen zu verstehen und entsprechende Antworten zu generieren.</p>
         <p style="margin-bottom:1em;"><strong>Nachrichten-Timestamps:</strong> Zeitstempel werden gespeichert, um den zeitlichen Verlauf der Konversation zu protokollieren.</p>
         <p style="margin-bottom:1em;"><strong>Message ID / Quoted Message ID:</strong> WhatsApp-interne IDs werden verwendet, um Nachrichten korrekt zuzuordnen.</p>
         <p style="margin-bottom:1em;"><strong>Zitierte Inhalte / Quoted Content:</strong> Zitate werden verarbeitet, um den Kontext Ihrer Anfrage vollständig zu erfassen.</p>
         <p style="margin-bottom:1em;"><strong>Reaktionen (Emoji + Nutzer):</strong> Ihre Reaktionen können gespeichert und anonymisiert ausgewertet werden.</p>
         <p style="margin-bottom:1em;"><strong>Verarbeitungsstatus (intern):</strong> Intern speichern wir den Bearbeitungsstatus Ihrer Nachrichten.</p>
         <p style="margin-bottom:1em;"><strong>Informationen zur Autorisierung (Whitelist-Status):</strong> Wir speichern den Autorisierungsstatus Ihrer Telefonnummer, um den Zugriff zu verwalten.</p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">4. Zwecke und Rechtsgrundlage der Verarbeitung</h3>
         <p style="margin-bottom:1em;">
-            Wir verarbeiten Ihre Daten ausschließlich zu folgenden Zwecken und basierend auf folgenden Rechtsgrundlagen:
+            Wir verarbeiten Ihre Daten ausschließlich zu folgenden Zwecken und auf Basis der genannten Rechtsgrundlagen:
         </p>
-        <p style="margin-bottom:1em;"><strong>Bereitstellung &amp; Betrieb des KI-gestützten Assistenten:</strong> Notwendig für die Funktion des Bots. Rechtsgrundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
-        <p style="margin-bottom:1em;"><strong>Nutzeridentifikation &amp; Zugriffskontrolle:</strong> Verarbeitung der Telefonnummer und Autorisierungsstatus. Rechtsgrundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
-        <p style="margin-bottom:1em;"><strong>Qualitätssicherung &amp; Verbesserung:</strong> Wir analysieren anonymisierte Daten, um den Dienst zu verbessern. Rechtsgrundlage: berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO).</p>
-        
+        <p style="margin-bottom:1em;"><strong>Bereitstellung &amp; Betrieb des KI-gestützten Assistenten:</strong> Zur Funktion des Bots. Rechtsgrundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
+        <p style="margin-bottom:1em;"><strong>Nutzeridentifikation &amp; Zugriffskontrolle:</strong> Verarbeitung der Telefonnummer/Autorisierung. Rechtsgrundlage: Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</p>
+        <p style="margin-bottom:1em;"><strong>Qualitätssicherung &amp; Verbesserung:</strong> Anonymisierte Analysen zur Optimierung. Rechtsgrundlage: berechtigtes Interesse (Art. 6 Abs. 1 lit. f DSGVO).</p>
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">5. Empfänger oder Kategorien von Empfängern personenbezogener Daten</h3>
         <p style="margin-bottom:1em;">
-            Grundsätzlich behandeln wir Ihre personenbezogenen Daten vertraulich. Folgende Empfänger können jedoch Daten erhalten:
+            Ihre Daten werden vertraulich behandelt. Folgende Empfänger sind möglich:
         </p>
-        <p style="margin-bottom:1em;"><strong>Auftragsverarbeiter:</strong> Z.B. Anbieter für Audio-Transkription oder KI-Modelle (Lemonfox AI, Poe, Google Gemini). Diese sind vertraglich verpflichtet, Datenschutzbestimmungen einzuhalten.</p>
+        <p style="margin-bottom:1em;"><strong>Auftragsverarbeiter:</strong> z.B. Dienste für Audio-Transkription (Lemonfox AI) oder KI-Modelle (Poe, Google). Alle sind vertraglich verpflichtet, Datenschutzbestimmungen einzuhalten.</p>
         <p style="margin-bottom:1em;"><strong>Öffentliche Stellen:</strong> Nur im Rahmen gesetzlicher Pflichten oder zur Abwehr von Gefahren.</p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">6. Datenübermittlung in Drittländer</h3>
         <p style="margin-bottom:1em;">
-            Bei Nutzung externer Dienste (z.B. Poe/Quora, Google) kann eine Übermittlung in Drittländer (insbesondere USA) erfolgen. Wir weisen Sie darauf hin, dass dort ggf. kein dem EU-Standard entsprechendes Datenschutzniveau besteht. Mit Ihrer Einwilligung stimmen Sie der Übermittlung zu.
+            Bei Nutzung externer Dienste (z.B. Poe/Quora, Google) kann eine Übermittlung in Drittländer (insbesondere USA) erfolgen. Wir weisen darauf hin, dass dort kein dem EU-Standard entsprechendes Datenschutzniveau bestehen kann. Mit Ihrer Einwilligung stimmen Sie dem zu.
         </p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">7. Speicherdauer und Löschung von Daten</h3>
         <p style="margin-bottom:1em;">
-            Wir speichern Ihre Daten nur so lange, wie es zur Erfüllung der Zwecke oder gesetzlicher Vorgaben erforderlich ist. Danach werden die Daten gelöscht oder anonymisiert.
+            Wir speichern Ihre Daten nur so lange, wie es zur Erfüllung der Zwecke oder gesetzlicher Vorgaben erforderlich ist. Anschließend werden sie gelöscht oder anonymisiert.
         </p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">8. Datensicherheit</h3>
         <p style="margin-bottom:1em;">
-            Wir treffen technische und organisatorische Maßnahmen zum Schutz Ihrer Daten (z.B. Verschlüsselung, Zugriffskontrollen). Diese werden dem aktuellen Stand der Technik angepasst.
+            Wir treffen geeignete technische und organisatorische Maßnahmen (z.B. Verschlüsselung, Zugriffskontrollen), um Ihre Daten vor unbefugtem Zugriff zu schützen.
         </p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">9. Ihre Rechte als betroffene Person</h3>
         <p style="margin-bottom:1em;">
-            Sie haben u.a. das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Sie können Ihre Einwilligung jederzeit widerrufen (Art. 7 Abs. 3 DSGVO). Zudem haben Sie das Recht, Beschwerde bei einer zuständigen Aufsichtsbehörde einzulegen.
+            Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Zudem können Sie Ihre Einwilligung jederzeit widerrufen (Art. 7 Abs. 3 DSGVO) und Beschwerde bei der Aufsichtsbehörde einlegen.
         </p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">10. Verwendung von Cookies (optional)</h3>
         <p style="margin-bottom:1em;">
-            Falls Ihr Bot Cookies setzt (z.B. via Poe.com), weisen Sie darauf hin. Andernfalls kann dieser Abschnitt entfallen.
+            Sofern Ihr Bot Cookies setzt (z.B. via Poe.com), informieren Sie Ihre Nutzer hierüber. Andernfalls kann dieser Abschnitt entfallen.
         </p>
-        
+
         <h3 style="margin-top:1.5rem;margin-bottom:0.5rem;">11. Aktualität und Änderung dieser Datenschutzerklärung</h3>
         <p style="margin-bottom:1em;">
             Diese Datenschutzerklärung ist aktuell gültig und datiert vom [Datum einfügen]. Wir behalten uns vor, sie jederzeit anzupassen, um rechtliche oder technische Änderungen zu berücksichtigen.
         </p>
     </div>
 
+    <!-- FOOTER -->
     <footer class="footer">
         <p>© 2025 Whuddy. Alle Rechte vorbehalten.</p>
         <div class="footer-links">
@@ -357,8 +375,8 @@
         </div>
     </footer>
 
+    <!-- 3. JavaScript: Theme Toggle -->
     <script>
-        // 2. Theme toggle on user click
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
