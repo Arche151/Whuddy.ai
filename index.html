@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <!-- 1. JavaScript für System-Theme-Erkennung & localStorage-Check -->
-    <script>
+<!DOCTYPE html> 
+<html lang="de"> 
+    <head> 
+        <!-- 1. JavaScript für System-Theme-Erkennung & localStorage-Check -->         
+        <script>
         function getInitialTheme() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) return savedTheme;
@@ -12,564 +12,142 @@
         }
         const initialTheme = getInitialTheme();
         document.documentElement.setAttribute('data-theme', initialTheme);
-    </script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whuddy - Dein WhatsApp KI-Assistent</title>
-    <!-- Hinweis: Du kannst weiterhin eine externe css/theme.css einbinden, 
-         falls du möchtest. Hier aber alles inline, wie gewünscht. -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- 2. Styles inkl. Light/Dark-Mode-Logik -->
-    <style>
-        /* Grundlegende Resets */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary: #10b981;
-            --dark: #222;
-            --light: #f8f7f4;
-            --gray: #64748b;
-            color-scheme: light dark;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Default (Light) Styles */
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.5;
-            color: var(--dark);
-            background: var(--light);
-        }
-        .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            padding: 1rem 2rem;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-        .logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-        }
-        .nav-links a {
-            color: inherit;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        .hamburger {
-            display: none; /* Standardmäßig hidden am Desktop */
-            flex-direction: column;
-            justify-content: center;
-            gap: 6px;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            padding: 0;
-        }
-        .hamburger span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: var(--dark);
-            transition: all 0.3s ease-in-out;
-            transform-origin: center;
-        }
-        .hamburger.active span:nth-child(1) {
-            transform: translateY(8px) rotate(45deg);
-        }
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .hamburger.active span:nth-child(3) {
-            transform: translateY(-8px) rotate(-45deg);
-        }
-        .hero {
-            min-height: 100vh;
-            padding: 8rem 1.5rem 1rem;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .hero-content {
-            max-width: 48rem;
-            margin: 0 auto;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #7c3aed, #f87171, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientText 3s ease infinite;
-        }
-        @keyframes gradientText {
-            0%, 100% {
-                background-size: 200% 200%;
-                background-position: left center;
-            }
-            50% {
-                background-size: 200% 200%;
-                background-position: right center;
-            }
-        }
-        .hero p {
-            font-size: 1.125rem;
-            margin-bottom: 2rem;
-        }
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .cta-button:hover {
-            transform: scale(1.05);
-        }
-        .cta-button img {
-            width: 20px;
-            height: 20px;
-        }
-        .features {
-            padding: 4rem 1.5rem;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            background: linear-gradient(to right, #7c3aed, #f87171, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .feature-card {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.5s ease-out;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            position: relative;
-            overflow: hidden;
-        }
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(
+    </script>         
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Whuddy - Dein WhatsApp KI-Assistent</title>         
+        <!-- Hinweis: Du kannst weiterhin eine externe css/theme.css einbinden, 
+         falls du möchtest. Hier aber alles inline, wie gewünscht. -->         
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"> 
+        <!-- 2. Styles inkl. Light/Dark-Mode-Logik -->         
+        <style>/* Grundlegende Resets */* { margin: 0; padding: 0; box-sizing: border-box; } :root { --primary: #10b981; --dark: #222; --light: #f8f7f4; --gray: #64748b; color-scheme: light dark; } html { scroll-behavior: smooth; } /* Default (Light) Styles */body { font-family: 'Inter', sans-serif; line-height: 1.5; color: var(--dark); background: var(--light); } .navbar { position: fixed; top: 0; left: 0; right: 0; padding: 1rem 2rem; background: rgba(255,255,255,0.8); backdrop-filter: blur(8px); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 100; } .logo { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; } .logo img { width: 40px; height: 40px; object-fit: contain; } .nav-links { display: flex; gap: 1.5rem; list-style: none; } .nav-links a { color: inherit; text-decoration: none; font-weight: 500; transition: color 0.2s; } .nav-links a:hover { color: var(--primary); } .hamburger { display: none;  /* Standardmäßig hidden am Desktop */ flex-direction: column; justify-content: center; gap: 6px; width: 24px; height: 24px; cursor: pointer; padding: 0; } .hamburger span { display: block; width: 100%; height: 2px; background: var(--dark); transition: all 0.3s ease-in-out; transform-origin: center; } .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); } .hamburger.active span:nth-child(2) { opacity: 0; } .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); } .hero { min-height: 100vh; padding: 8rem 1.5rem 1rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; } .hero-content { max-width: 48rem; margin: 0 auto; } .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem; background: linear-gradient(to right, #7c3aed, #f87171, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 3s ease infinite; } @keyframes gradientText { 0%, 100% {  background-size: 200% 200%;  background-position: left center; }  50% {  background-size: 200% 200%;  background-position: right center; } } .hero p { font-size: 1.125rem; margin-bottom: 2rem; } .cta-button { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: white; padding: 0.75rem 1.5rem; border-radius: 9999px; text-decoration: none; font-weight: 500; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); } .cta-button:hover { transform: scale(1.05); } .cta-button img { width: 20px; height: 20px; } .features { padding: 4rem 1.5rem; } .section-title { text-align: center; font-size: 2rem; margin-bottom: 3rem; background: linear-gradient(to right, #7c3aed, #f87171, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; } .feature-card { background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); border-radius: 1rem; padding: 1.5rem; text-align: center; opacity: 0; transform: translateY(30px); transition: all 0.5s ease-out; box-shadow: 0 4px 16px rgba(0,0,0,0.08); position: relative; overflow: hidden; } .feature-card::before { content: ''; position: absolute; top: 0; left: -50%; width: 200%; height: 100%; background: linear-gradient(
                 to right,
                 transparent,
                 rgba(255,255,255,0.2),
                 transparent
-            );
-            transition: transform 0.5s ease-out;
-            transform: translateX(-100%) skewX(-15deg);
-        }
-        .feature-card:hover::before {
-            transform: translateX(50%) skewX(-15deg);
-        }
-        .feature-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-        }
-        .feature-card.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-        .feature-icon {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-        .about {
-            padding: 4rem 1.5rem;
-        }
-        .about-content {
-            max-width: 48rem;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 1rem;
-            padding: 2rem;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease-out;
-        }
-        .about-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .footer {
-            padding: 1.5rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .footer-links a {
-            color: inherit;
-            text-decoration: underline;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        .footer-links a:hover {
-            opacity: 1;
-        }
-        .fab {
-            position: fixed;
-            bottom: -100px;
-            right: 1.5rem;
-            z-index: 100;
-            opacity: 0;
-            transition: all 0.3s ease-out;
-        }
-        .fab.visible {
-            bottom: 1.5rem;
-            opacity: 1;
-        }
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .hero-animate {
-            opacity: 0;
-            transform: translateY(50px);
-            animation: heroFadeIn 0.8s ease-out forwards;
-        }
-        @keyframes heroFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .nav-links li {
-            display: flex;
-            align-items: center;
-        }
-        .theme-toggle {
-            background: none;
-            border: none;
-            padding: 0;
-            color: inherit;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-        .theme-toggle:hover {
-            background: rgba(0,0,0,0.05);
-        }
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .theme-toggle .moon {
-            display: none;
-        }
-
-        /*
-         * Fallback: Wenn OS Dark Mode hat und data-theme nicht explizit "light" ist,
-         * dann nutze Dark.
-         */
-        @media (prefers-color-scheme: dark) {
-            :root:not([data-theme="light"]) body {
-                background: var(--dark);
-                color: var(--light);
-            }
-            :root:not([data-theme="light"]) .navbar {
-                background: rgba(34,34,34,0.8);
-            }
-            :root:not([data-theme="light"]) .hamburger span {
-                background: var(--light);
-            }
-        }
-
-        /*
-         * Wenn data-theme="dark" => Dark Mode explizit
-         */
-        [data-theme="dark"] body {
-            background: var(--dark);
-            color: var(--light);
-        }
-        [data-theme="dark"] .navbar {
-            background: rgba(34,34,34,0.8);
-        }
-        [data-theme="dark"] .hamburger span {
-            background: var(--light);
-        }
-        [data-theme="dark"] .theme-toggle .sun {
-            display: none;
-        }
-        [data-theme="dark"] .theme-toggle .moon {
-            display: block;
-        }
-
-        /*
-         * Wenn data-theme="light" => Light Mode explizit
-         */
-        [data-theme="light"] body {
-            background: var(--light);
-            color: var(--dark);
-        }
-        [data-theme="light"] .navbar {
-            background: rgba(255,255,255,0.8);
-        }
-        [data-theme="light"] .hamburger span {
-            background: var(--dark);
-        }
-        [data-theme="light"] .theme-toggle .moon {
-            display: none;
-        }
-        [data-theme="light"] .theme-toggle .sun {
-            display: block;
-        }
-
-        /* Responsive - Hamburger ab 768px oder kleiner */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-            .nav-links {
-                display: flex;
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: rgba(34,38,36,0.97);
-                padding: 2rem;
-                flex-direction: column;
-                align-items: center;
-                gap: 1.5rem;
-                opacity: 0;
-                pointer-events: none;
-                transform: translateY(-20px);
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            }
-            .nav-links.active {
-                opacity: 1;
-                pointer-events: all;
-                transform: translateY(0);
-            }
-            .nav-links a {
-                color: white;
-            }
-            .nav-links a:hover {
-                color: rgba(255,255,255,0.8);
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="logo">
-            <img src="https://iili.io/2sL4YYB.png" alt="Whuddy Logo">
-            <h2>Whuddy</h2>
-        </div>
-
-        <!-- Hamburger Menu für Mobile -->
-        <div class="hamburger">
-            <span></span><span></span><span></span>
-        </div>
-
-        <!-- Navigation Links -->
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#about">Über Whuddy</a></li>
-            <li><a href="#contact">Kontakt</a></li>
-            <li>
-                <!-- Theme-Toggle-Button -->
-                <button class="theme-toggle" aria-label="Theme wechseln">
-                    <!-- Icon, wenn Dark Mode verfügbar -->
-                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <!-- Icon, wenn Light Mode verfügbar -->
-                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-content hero-animate">
-            <h1>Whuddy, dein KI-Assistent auf WhatsApp</h1>
-            <p>
+            ); transition: transform 0.5s ease-out; transform: translateX(-100%) skewX(-15deg); } .feature-card:hover::before { transform: translateX(50%) skewX(-15deg); } .feature-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.12); } .feature-card.visible { opacity: 1; transform: translateY(0) scale(1); } .feature-icon { width: 3.5rem; height: 3.5rem; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; } .about { padding: 4rem 1.5rem; } .about-content { max-width: 48rem; margin: 0 auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 1rem; padding: 2rem; text-align: center; opacity: 0; transform: translateY(30px); transition: all 0.6s ease-out; } .about-content.visible { opacity: 1; transform: translateY(0); } .footer { padding: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); text-align: center; } .footer-links { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; } .footer-links a { color: inherit; text-decoration: underline; opacity: 0.7; transition: opacity 0.2s; } .footer-links a:hover { opacity: 1; } .fab { position: fixed; bottom: -100px; right: 1.5rem; z-index: 100; opacity: 0; transition: all 0.3s ease-out; } .fab.visible { bottom: 1.5rem; opacity: 1; } .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; } .fade-up.visible { opacity: 1; transform: translateY(0); } .hero-animate { opacity: 0; transform: translateY(50px); animation: heroFadeIn 0.8s ease-out forwards; } @keyframes heroFadeIn { to {  opacity: 1;  transform: translateY(0); } } .nav-links li { display: flex; align-items: center; } .theme-toggle { background: none; border: none; padding: 0; color: inherit; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; transition: background-color 0.3s; } .theme-toggle:hover { background: rgba(0,0,0,0.05); } .theme-toggle svg { width: 20px; height: 20px; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); } .theme-toggle .moon { display: none; } /* * Fallback: Wenn OS Dark Mode hat und data-theme nicht explizit "light" ist,
+         * dann nutze Dark. */@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body {  background: var(--dark);  color: var(--light); }  :root:not([data-theme="light"]) .navbar {  background: rgba(34,34,34,0.8); }  :root:not([data-theme="light"]) .hamburger span {  background: var(--light); } } /* * Wenn data-theme="dark" => Dark Mode explizit */[data-theme="dark"] body { background: var(--dark); color: var(--light); } [data-theme="dark"] .navbar { background: rgba(34,34,34,0.8); } [data-theme="dark"] .hamburger span { background: var(--light); } [data-theme="dark"] .theme-toggle .sun { display: none; } [data-theme="dark"] .theme-toggle .moon { display: block; } /* * Wenn data-theme="light" => Light Mode explizit */[data-theme="light"] body { background: var(--light); color: var(--dark); } [data-theme="light"] .navbar { background: rgba(255,255,255,0.8); } [data-theme="light"] .hamburger span { background: var(--dark); } [data-theme="light"] .theme-toggle .moon { display: none; } [data-theme="light"] .theme-toggle .sun { display: block; } /* Responsive - Hamburger ab 768px oder kleiner */@media (max-width: 768px) { .hamburger {  display: flex; }  .nav-links {  display: flex;  position: fixed;  top: 70px;  left: 0;  right: 0;  background: rgba(34,38,36,0.97);  padding: 2rem;  flex-direction: column;  align-items: center;  gap: 1.5rem;  opacity: 0;  pointer-events: none;  transform: translateY(-20px);  transition: all 0.3s ease;  box-shadow: 0 4px 6px rgba(0,0,0,0.1); }  .nav-links.active {  opacity: 1;  pointer-events: all;  transform: translateY(0); }  .nav-links a {  color: white; }  .nav-links a:hover {  color: rgba(255,255,255,0.8); }  .hero h1 {  font-size: 2rem; } }</style>         
+    </head>     
+    <body> 
+        <!-- NAVBAR -->         
+        <nav class="navbar"> 
+            <div class="logo"> 
+                <img src="https://iili.io/2sL4YYB.png" alt="Whuddy Logo"> 
+                <h2>Whuddy</h2> 
+            </div>             
+            <!-- Hamburger Menu für Mobile -->             
+            <div class="hamburger"> <span></span>
+                <span></span>
+                <span></span> 
+            </div>             
+            <!-- Navigation Links -->             
+            <ul class="nav-links"> 
+                <li>
+                    <a href="#features">Features</a>
+                </li>                 
+                <li>
+                    <a href="#about">Über Whuddy</a>
+                </li>                 
+                <li>
+                    <a href="#contact">Kontakt</a>
+                </li>                 
+                <li> 
+                    <!-- Theme-Toggle-Button -->                     
+                    <button class="theme-toggle" aria-label="Theme wechseln"> 
+                        <!-- Icon, wenn Dark Mode verfügbar -->                         
+                        <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> 
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>                             
+                        </svg>                         
+                        <!-- Icon, wenn Light Mode verfügbar -->                         
+                        <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> 
+                            <circle cx="12" cy="12" r="5"></circle>                             
+                            <line x1="12" y1="1" x2="12" y2="3"></line>                             
+                            <line x1="12" y1="21" x2="12" y2="23"></line>                             
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>                             
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>                             
+                            <line x1="1" y1="12" x2="3" y2="12"></line>                             
+                            <line x1="21" y1="12" x2="23" y2="12"></line>                             
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>                             
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>                             
+                        </svg>                         
+                    </button>                     
+                </li>                 
+            </ul>             
+        </nav>         
+        <!-- HERO SECTION -->         
+        <section class="hero"> 
+            <div class="hero-content hero-animate"> 
+                <h1>Whuddy, dein KI-Assistent auf WhatsApp</h1> 
+                <p> 
                 Hol dir Whuddy direkt in deine WhatsApp-Kontakte: Stelle Fragen, brainstorme Ideen,
                 generiere Bilder, transkribiere Sprachmemos und teile ihn mit deinem Team.
-                Endlich ein schlauer, virtueller Assistent, den du einfach zur Chatgruppe hinzufügen kannst!
-            </p>
-            <a href="#" class="cta-button" id="hero-cta">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-                Schreib Whuddy auf WhatsApp
-            </a>
-        </div>
-        <!-- Video statt statisches Bild -->
-        <video autoplay loop muted playsinline class="hero-animate" style="width:190px; margin-top:2.5rem;">
-            <source src="whuddy_animated_transparent.webm" type="video/webm"/>
-            Dein Browser unterstützt kein HTML5-Video.
-        </video>
-    </section>
-
-    <!-- FEATURES SECTION -->
-    <section id="features" class="features">
-        <h2 class="section-title fade-up">Was Whuddy alles kann</h2>
-        <div class="features-grid">
-            <!-- Feature Cards -->
-            <div class="feature-card fade-up" style="transition-delay: 0s;">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #72EDF2 0%, #5151E5 100%);">🤖</div>
-                <h3>KI-Antworten &amp; Brainstorming</h3>
-                <p>Schreib einfach über WhatsApp mit Whuddy und lass ihn deine Fragen beantworten, Ideen generieren oder Tipps geben.</p>
-            </div>
-            <div class="feature-card fade-up" style="transition-delay: 0.1s;">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #FFA7C4 0%, #F54EA2 100%);">🎧</div>
-                <h3>Audio-Transkription</h3>
-                <p>Schick Whuddy deine Sprachnachrichten – er wandelt sie automatisch in Text um.</p>
-            </div>
-            <div class="feature-card fade-up" style="transition-delay: 0.2s;">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #e8d5ff 0%, #a15afe 100%);">🎨</div>
-                <h3>Bild &amp; Diagramm-Generierung</h3>
-                <p>Ob kleine Scribbles, Diagramme oder visuelle Ideen – Whuddy erstellt dir Bilder aus deinen Eingaben.</p>
-            </div>
-            <div class="feature-card fade-up" style="transition-delay: 0.3s;">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);">👥</div>
-                <h3>Gruppen-Assistent</h3>
-                <p>Füge Whuddy in Gruppen hinzu, damit alle Mitglieder von den KI-Funktionen profitieren können.</p>
-            </div>
-            <div class="feature-card fade-up" style="transition-delay: 0.4s;">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">💡</div>
-                <h3>Kontextbezogene Antworten</h3>
-                <p>Whuddy merkt sich den Chat-Verlauf und kann darauf basierend deine Fragen beantworten.</p>
-            </div>
-            <div class="feature-card fade-up" style="transition-delay: 0.5s;">
-                <div class="feature-icon" style="background: linear-gradient(135deg, #c3ec52 0%, #0ba29d 100%);">🔒</div>
-                <h3>Vertrauliche Nutzung</h3>
-                <p>Deine Daten bleiben diskret. Whuddy achtet darauf, sensible Informationen nur auf deine Freigabe hin zu teilen.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT SECTION -->
-    <section id="about" class="about">
-        <div class="about-content">
-            <h2 class="section-title">Über Whuddy</h2>
-            <p>
+                Endlich ein schlauer, virtueller Assistent, den du einfach zur Chatgruppe hinzufügen kannst! </p> <a href="#" class="cta-button" id="hero-cta">  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"> 
+                Schreib Whuddy auf WhatsApp </a> 
+            </div>             
+            <!-- Video statt statisches Bild -->             
+            <video autoplay loop muted playsinline class="hero-animate" style="width:190px; margin-top:2.5rem;"> 
+                <source src="whuddy_animated_transparent.webm" type="video/webm"/> 
+                Dein Browser unterstützt kein HTML5-Video.
+            </video>             
+        </section>         
+        <!-- FEATURES SECTION -->         
+        <section id="features" class="features"> 
+            <h2 class="section-title fade-up">Was Whuddy alles kann</h2> 
+            <div class="features-grid"> 
+                <!-- Feature Cards -->                 
+                <div class="feature-card fade-up" style="transition-delay: 0s;"> 
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #72EDF2 0%, #5151E5 100%);">🤖</div>                     
+                    <h3>KI-Antworten &amp; Brainstorming</h3> 
+                    <p>Schreib einfach über WhatsApp mit Whuddy und lass ihn deine Fragen beantworten, Ideen generieren oder Tipps geben.</p> 
+                </div>                 
+                <div class="feature-card fade-up" style="transition-delay: 0.1s;"> 
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #FFA7C4 0%, #F54EA2 100%);">🎧</div>                     
+                    <h3>Audio-Transkription</h3> 
+                    <p>Schick Whuddy deine Sprachnachrichten – er wandelt sie automatisch in Text um.</p> 
+                </div>                 
+                <div class="feature-card fade-up" style="transition-delay: 0.2s;"> 
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #e8d5ff 0%, #a15afe 100%);">🎨</div>                     
+                    <h3>Bild &amp; Diagramm-Generierung</h3> 
+                    <p>Ob kleine Scribbles, Diagramme oder visuelle Ideen – Whuddy erstellt dir Bilder aus deinen Eingaben.</p> 
+                </div>                 
+                <div class="feature-card fade-up" style="transition-delay: 0.3s;"> 
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);">👥</div>                     
+                    <h3>Gruppen-Assistent</h3> 
+                    <p>Füge Whuddy in Gruppen hinzu, damit alle Mitglieder von den KI-Funktionen profitieren können.</p> 
+                </div>                 
+                <div class="feature-card fade-up" style="transition-delay: 0.4s;"> 
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">💡</div>                     
+                    <h3>Kontextbezogene Antworten</h3> 
+                    <p>Whuddy merkt sich den Chat-Verlauf und kann darauf basierend deine Fragen beantworten.</p> 
+                </div>                 
+                <div class="feature-card fade-up" style="transition-delay: 0.5s;"> 
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #c3ec52 0%, #0ba29d 100%);">🔒</div>                     
+                    <h3>Vertrauliche Nutzung</h3> 
+                    <p>Deine Daten bleiben diskret. Whuddy achtet darauf, sensible Informationen nur auf deine Freigabe hin zu teilen.</p> 
+                </div>                 
+            </div>             
+        </section>         
+        <!-- ABOUT SECTION -->         
+        <section id="about" class="about"> 
+            <div class="about-content"> 
+                <h2 class="section-title">Über Whuddy</h2> 
+                <p> 
                 Whuddy ist ein moderner, KI-gestützter Chatbot, den du einfach über WhatsApp erreichst. Entwickelt,
                 um dir Zeit zu sparen und Arbeitsschritte zu vereinfachen: Ideen sammeln, Sprachnachrichten transkribieren,
                 Bilder generieren und vieles mehr. Dank intelligenter Technologien wird Whuddy ständig besser darin,
-                dir zu helfen.
-            </p>
-        </div>
-    </section>
-
-    <!-- Floating Action Button (CTA) -->
-    <a href="#" class="cta-button fab" id="fab">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        Schreib Whuddy
-    </a>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p>© 2025 Whuddy. Alle Rechte vorbehalten.</p>
-        <div class="footer-links">
-            <a href="/impressum.html" id="impressum-link">Impressum</a>
-            <a href="/datenschutz.html">Datenschutzerklärung</a>
-        </div>
-    </footer>
-
-    <!-- 3. JavaScript: Observer, Hamburger, Theme Toggle -->
-    <script>
+                dir zu helfen. </p> 
+            </div>             
+        </section>         
+        <!-- Floating Action Button (CTA) -->         <a href="#" class="cta-button fab" id="fab">  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"> 
+        Schreib Whuddy </a> 
+        <!-- FOOTER -->         
+        <footer class="footer"> 
+            <p>© 2025 Whuddy. Alle Rechte vorbehalten.</p> 
+            <div class="footer-links"> <a href="/impressum.html" id="impressum-link">Impressum</a> <a href="/datenschutz.html">Datenschutzerklärung</a> 
+            </div>             
+        </footer>         
+        <!-- 3. JavaScript: Observer, Hamburger, Theme Toggle -->         
+        <script>
         // Intersection Observer Setup for fade-up animations
         const observerOptions = {
             threshold: 0.1,
@@ -633,6 +211,6 @@
         // Init
         initHamburger();
         document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
-    </script>
-</body>
+    </script>         
+    </body>     
 </html>
