@@ -18,7 +18,7 @@
     <title>Impressum - Whuddy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 2. Styles inkl. Light/Dark-Mode-Logik und CTA-Button -->
+    <!-- 2. Styles inkl. Light/Dark-Mode-Logik, CTA-Button, Abstände wie in datenschutz.html -->
     <style>
         /* Grundlegende Resets und Variablen */
         * {
@@ -47,6 +47,20 @@
             display: flex;
             flex-direction: column;
         }
+
+        /* Typografie-Abstände */
+        h2 {
+            margin-bottom: 1rem;
+        }
+        h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* Navbar */
         .navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -92,6 +106,8 @@
         .nav-links a:hover {
             color: var(--primary);
         }
+
+        /* Theme Toggle */
         .theme-toggle {
             background: none;
             border: none;
@@ -171,7 +187,7 @@
             height: 20px;
         }
 
-        /* Floating CTA Button (FAB) – dauerhaft sichtbar unten rechts */
+        /* Floating CTA Button (FAB) – immer sichtbar unten rechts */
         .fab {
             position: fixed;
             bottom: 1.5rem;
@@ -179,9 +195,7 @@
             z-index: 100;
         }
 
-        /*
-         * Dark-Mode-Fallback via prefers-color-scheme (wenn nicht data-theme="light")
-         */
+        /* Dark-Mode-Fallback via prefers-color-scheme (wenn nicht data-theme="light") */
         @media (prefers-color-scheme: dark) {
             :root:not([data-theme="light"]) body {
                 background: var(--dark);
@@ -192,9 +206,7 @@
             }
         }
 
-        /*
-         * Explizit data-theme="dark"
-         */
+        /* data-theme="dark" */
         [data-theme="dark"] body {
             background: var(--dark);
             color: var(--light);
@@ -209,9 +221,7 @@
             display: block;
         }
 
-        /*
-         * Explizit data-theme="light"
-         */
+        /* data-theme="light" */
         [data-theme="light"] body {
             background: var(--light);
             color: var(--dark);
@@ -228,7 +238,7 @@
 
         @media (max-width: 768px) {
             .nav-links {
-                display: none; /* Falls du ein Mobile-Hamburger-Menü einbauen willst */
+                display: none; /* Falls du ein Mobile-Hamburger-Menü einbauen möchtest */
             }
         }
     </style>
@@ -241,15 +251,9 @@
             <h2>Whuddy</h2>
         </a>
         <ul class="nav-links">
-            <li>
-                <a href="/#features">Features</a>
-            </li>
-            <li>
-                <a href="/#about">Über Whuddy</a>
-            </li>
-            <li>
-                <a href="/#contact">Kontakt</a>
-            </li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#about">Über Whuddy</a></li>
+            <li><a href="/#contact">Kontakt</a></li>
             <li>
                 <button class="theme-toggle" aria-label="Theme wechseln">
                     <!-- Icon für Dark Mode -->
@@ -277,7 +281,7 @@
         </ul>
     </nav>
 
-    <!-- Floating CTA-Button (unten rechts immer sichtbar) -->
+    <!-- Floating CTA-Button (unten rechts) -->
     <a href="https://wa.me/+491234567890" class="cta-button fab">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
         Schreib Whuddy
@@ -285,7 +289,6 @@
 
     <!-- HAUPTINHALT: Impressum -->
     <div class="content">
-        <!-- Hier folgt ein Platzhalter-Impressum, bitte individuell anpassen -->
         <h2>Impressum</h2>
         <p>
             Angaben gemäß § 5 TMG / § 18 Medienstaatsvertrag:
@@ -303,6 +306,7 @@
             E-Mail: (E-Mail-Adresse einfügen)<br>
             Website: (Website, falls vorhanden)
         </p>
+
         <h3>Haftung für Inhalte</h3>
         <p>
             Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf
@@ -316,6 +320,7 @@
             möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir
             diese Inhalte umgehend entfernen.
         </p>
+
         <h3>Haftung für Links</h3>
         <p>
             Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte
@@ -329,6 +334,7 @@
             Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen
             werden wir derartige Links umgehend entfernen.
         </p>
+
         <h3>Urheberrecht</h3>
         <p>
             Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen
@@ -344,16 +350,18 @@
             bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von
             Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
         </p>
+
         <h3>Streitschlichtung</h3>
         <p>
             Die Europäische Kommission stellt eine Plattform zur
-            Online-Streitbeilegung (OS) bereit: 
+            Online-Streitbeilegung (OS) bereit:
             <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
                 https://ec.europa.eu/consumers/odr
             </a>.
             Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
             einer Verbraucherschlichtungsstelle teilzunehmen.
         </p>
+
         <h3>Kontakt</h3>
         <p>
             Sollten Sie Fragen zu diesem Impressum haben, wenden Sie sich bitte an uns
@@ -371,7 +379,7 @@
         </div>
     </footer>
 
-    <!-- 3. JavaScript: Theme-Toggle -->
+    <!-- 3. JavaScript: Theme Toggle -->
     <script>
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
